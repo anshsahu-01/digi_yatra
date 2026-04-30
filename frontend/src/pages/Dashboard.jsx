@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  MapPin,
+  Zap,
+  Activity,
+  ArrowRight,
+  Clock3,
+} from "lucide-react";
+
 import AppShell from "../components/AppShell";
 import StationCard from "../components/StationCard";
 import Button from "../components/ui/Button";
@@ -19,93 +27,118 @@ export default function Dashboard({ user, onLogout }) {
 
   return (
     <AppShell title="Dashboard" user={user} onLogout={onLogout}>
-      {!data && !error ? <Loader label="Loading dashboard..." /> : null}
-      {error ? <Card className="text-rose-500">{error}</Card> : null}
+      {!data && !error ? <Loader label="Loading..." /> : null}
+
+      {error ? (
+        <Card className="rounded-3xl border border-rose-100 text-rose-500">
+          {error}
+        </Card>
+      ) : null}
 
       {data ? (
-        <div className="space-y-10">
-          <section className="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
-            <div className="space-y-8 rounded-[40px] bg-white px-8 py-10 shadow-[0_18px_40px_rgba(15,23,42,0.07)]">
-              <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.32em] text-slate-400">
-                {data.cityBands.map((city) => (
-                  <span key={city}>{city}</span>
-                ))}
-              </div>
-
-              <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-                <div>
-                  <h2 className="max-w-3xl text-4xl font-semibold leading-[1.15] text-slate-900">
-                    Route-first charging for Madhya Pradesh, built around where you are heading next.
-                  </h2>
-                  <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-500">
-                    Fewer distractions, smarter station choice, and booking decisions shaped by proximity, charging speed, and spend.
-                  </p>
-
-                  <div className="mt-8 flex flex-wrap gap-3">
-                    <Button as={Link} to="/booking" className="rounded-full px-6">
-                      Start Smart Booking
-                    </Button>
-                    <Button as={Link} to="/stations" variant="secondary" className="rounded-full px-6">
-                      Browse MP Stations
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-4 rounded-[32px] bg-[#edf4ff] p-6">
-                  <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Live snapshot</p>
-                  {data.stats.map((stat) => (
-                    <div key={stat.label} className="flex items-center justify-between gap-4 border-b border-white/70 pb-4 last:border-b-0 last:pb-0">
-                      <div>
-                        <div className="text-sm text-slate-500">{stat.label}</div>
-                        <div className="mt-1 text-2xl font-semibold text-slate-900">{stat.value}</div>
-                      </div>
-                      <div className="max-w-[140px] text-right text-xs uppercase tracking-[0.18em] text-[#467ee5]">
-                        {stat.change}
-                      </div>
-                    </div>
+        <div className="space-y-8">
+          {/* HERO */}
+          <section className="overflow-hidden rounded-[36px] bg-white border border-slate-200 p-8 text-white">
+            <div className="grid gap-8 xl:grid-cols-[1.2fr_0.8fr]">
+              <div>
+                <div className="flex flex-wrap gap-2">
+                  {data.cityBands.slice(0, 4).map((city) => (
+                    <span
+                      key={city}
+                      className="rounded-full bg-white/10 px-4 py-1 text-xs text-white/70"
+                    >
+                      {city}
+                    </span>
                   ))}
                 </div>
-              </div>
-            </div>
 
-            <div className="space-y-4">
-              <div className="rounded-[32px] bg-[#d9edff] px-6 py-8">
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Charging pulse</p>
-                <h3 className="mt-4 text-3xl font-semibold leading-tight text-slate-900">Best station suggestions now respond to route cost, not just distance.</h3>
-                <p className="mt-4 text-sm leading-7 text-slate-600">
-                  Booking intelligence now considers ETA, charging spend, and charger readiness together.
+                <h1 className="mt-6 max-w-2xl text-4xl font-semibold leading-tight text-slate-900">
+                  Find smarter EV charging stops.
+                </h1>
+
+                <p className="mt-4 max-w-xl text-sm leading-7 text-slate-500">
+                  Discover nearby stations, compare speed & pricing, and book instantly.
                 </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button
+                    as={Link}
+                    to="/booking"
+                    className="rounded-full px-6"
+                  >
+                    Start Booking
+                  </Button>
+
+                  <Button
+                    as={Link}
+                    to="/stations"
+                    variant="secondary"
+                    className="rounded-full border-white/20 bg-white/10 px-6 text-white hover:bg-white/20"
+                  >
+                    Explore Stations
+                  </Button>
+                </div>
               </div>
 
-              <Card className="rounded-[32px]">
-                <p className="text-sm uppercase tracking-[0.22em] text-slate-400">Recent activity</p>
-                <div className="mt-5 space-y-5">
-                  {data.recentActivity.map((item) => (
-                    <div key={item.id} className="grid grid-cols-[10px_1fr] gap-4">
-                      <div className="mt-2 h-2.5 w-2.5 rounded-full bg-[#467ee5]" />
-                      <div>
-                        <div className="flex items-center justify-between gap-4">
-                          <h4 className="font-medium text-slate-800">{item.title}</h4>
-                          <span className="text-xs text-slate-400">{item.time}</span>
-                        </div>
-                        <p className="mt-1 text-sm leading-6 text-slate-500">{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
+
+              {/* QUICK STATS */}
+<div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
+  {data.stats.slice(0, 3).map((stat, index) => {
+    const icons = [
+      <Zap size={18} className="text-[#467ee5]" />,
+      <MapPin size={18} className="text-[#467ee5]" />,
+      <Activity size={18} className="text-[#467ee5]" />,
+    ];
+
+    return (
+      <div
+        key={stat.label}
+        className="rounded-2xl border border-slate-200 bg-white p-5 transition hover:shadow-sm"
+      >
+        <div className="flex items-start justify-between">
+          <div className="rounded-xl bg-slate-50 p-2.5">
+            {icons[index]}
+          </div>
+
+          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-500">
+            {stat.change}
+          </span>
+        </div>
+
+        <h3 className="mt-6 text-3xl font-semibold tracking-tight text-slate-800">
+          {stat.value}
+        </h3>
+
+        <p className="mt-1 text-sm text-slate-500">
+          {stat.label}
+        </p>
+      </div>
+    );
+  })}
+</div>
             </div>
           </section>
 
-          <section className="space-y-5">
-            <div className="flex items-end justify-between gap-4">
+          {/* RECOMMENDED */}
+          <section>
+            <div className="mb-5 flex items-center justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Curated route picks</p>
-                <h2 className="mt-2 text-3xl font-semibold text-slate-900">Suggested stations that feel worth the stop.</h2>
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  Recommended Stations
+                </h2>
+
+                <p className="mt-1 text-sm text-slate-500">
+                  Best picks based on availability & route.
+                </p>
               </div>
-              <Button as={Link} to="/recommendations" variant="secondary" className="rounded-full px-6">
-                View full ranking
-              </Button>
+
+              <Link
+                to="/recommendations"
+                className="flex items-center gap-2 text-sm font-medium text-[#467ee5]"
+              >
+                View all
+                <ArrowRight size={16} />
+              </Link>
             </div>
 
             <div className="grid gap-5 xl:grid-cols-3">
@@ -113,6 +146,63 @@ export default function Dashboard({ user, onLogout }) {
                 <StationCard key={station.id} station={station} />
               ))}
             </div>
+          </section>
+
+          {/* ACTIVITY */}
+          <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+            {/* LEFT CARD */}
+            <div className="rounded-[32px] bg-[#edf4ff] p-7">
+              <p className="text-sm font-medium text-[#467ee5]">
+                Charging Insights
+              </p>
+
+              <h3 className="mt-3 text-2xl font-semibold leading-snug text-slate-900">
+                Faster charging decisions with live availability.
+              </h3>
+
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                Smart recommendations now balance charging speed,
+                wait time, and estimated cost.
+              </p>
+            </div>
+
+            {/* ACTIVITY CARD */}
+            <Card className="rounded-[32px] border border-slate-100 shadow-none">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-slate-900">
+                  Recent Activity
+                </h3>
+
+                <Clock3 size={18} className="text-slate-400" />
+              </div>
+
+              <div className="mt-6 space-y-5">
+                {data.recentActivity.slice(0, 3).map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-start gap-4 rounded-2xl border border-slate-100 p-4"
+                  >
+                    <div className="mt-1 h-2.5 w-2.5 rounded-full bg-[#467ee5]" />
+
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between gap-3">
+                        <h4 className="text-sm font-medium text-slate-800">
+                          {item.title}
+                        </h4>
+
+                        <span className="text-xs text-slate-400">
+                          {item.time}
+                        </span>
+                      </div>
+
+                      <p className="mt-1 text-sm leading-6 text-slate-500">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
           </section>
         </div>
       ) : null}
